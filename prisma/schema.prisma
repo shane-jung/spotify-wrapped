@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model listening_history {
+  id          Int       @id @default(autoincrement())
+  track_uri   String?   @db.VarChar(255)
+  track_name  String?   @db.VarChar(255)
+  artist_name String?   @db.VarChar(255)
+  album_name  String?   @db.VarChar(255)
+  played_at   DateTime? @unique @db.Timestamp(6)
+  ms_played   Int?
+}
