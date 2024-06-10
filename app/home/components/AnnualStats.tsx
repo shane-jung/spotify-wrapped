@@ -1,18 +1,7 @@
-"use client";
-import spotify from "@/lib/spotify";
-import { useEffect, useState } from "react";
+import { fetchTopTracks } from "@/lib/spotify";
 
-export default function AnnualStats() {
-  const [stats, setStats] = useState<any>(null);
-
-  async function getStats() {
-    const data = await spotify.currentUser.topItems("tracks", "long_term");
-    console.log(data);
-    setStats(data);
-  }
-  useEffect(() => {
-    getStats();
-  }, []);
+export default async function AnnualStats() {
+  const stats = await fetchTopTracks();
 
   return (
     <div>
@@ -23,7 +12,7 @@ export default function AnnualStats() {
 
       {stats && (
         <div>
-          <h2 className="text-lg font-semibold mb-2">Top Tracks</h2>
+          <h2 className="mb-2 text-lg font-semibold">Top Tracks</h2>
           <ol className="list-decimal pl-4">
             {stats.items.slice(0, 5).map((item: any, i: number) => (
               <li key={item.id} className="text-sm opacity-50">

@@ -1,23 +1,34 @@
-"use client";
-import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { auth } from "@/auth";
+import axios from "@/lib/axios";
 
-const spotifyApiSingleton = () => {
-  let sdk = SpotifyApi.withUserAuthorization(
-    "febdfe488e774c68aabb2e041145071f",
-    "http://localhost:8000",
-    ["user-read-recently-played"]
-  );
-  return sdk;
+const fetchProfile = async () => {
+  const res = await axios.get("https://api.spotify.com/v1/me");
+  return res.data;
 };
 
-type SpotifyClientSingleton = ReturnType<typeof spotifyApiSingleton>;
-
-const globalForSpotify = globalThis as unknown as {
-  spotify: SpotifyClientSingleton | undefined;
+const fetchArtist = async (id: string) => {
+  const res = await axios.get(`https://api.spotify.com/v1/artists/${id}`);
+  return res.data;
 };
 
-let spotify = globalForSpotify.spotify ?? spotifyApiSingleton();
+const fetchTopTracks = async () => {
+  try {
+    const res = await axios.get("https://api.spotify.com/v1/me/top/tracks");
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching top tracks", error);
+    return null;
+  }
+};
 
-export default spotify;
+const fetchTopArtists = async () => {
+  try {
+    const res = await axios.get("https://api.spotify.com/v1/me/top/artists");
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching top artists", error);
+    return null;
+  }
+};
 
-if (process.env.NODE_ENV !== "production") globalForSpotify.spotify = spotify;
+export { fetchProfile, fetchArtist, fetchTopTracks, fetchTopArtists };
