@@ -17,7 +17,7 @@ export default function RecentlyPlayedList({
         { transform: "translateY(0)" },
       ],
       {
-        duration: 40000,
+        duration: 120000,
         iterations: Infinity,
       },
     );
@@ -42,31 +42,34 @@ export default function RecentlyPlayedList({
               <p className="text-sm opacity-50">{track.artist_name}</p>
             </div>
 
-            <span className="opacity-50">
-              {track.played_at &&
-                (track.played_at >
-                new Date(new Date().setMinutes(new Date().getMinutes() - 1))
-                  ? "Just Now"
-                  : track.played_at >
-                      new Date(new Date().setHours(new Date().getHours() - 1))
-                    ? `${Math.floor(
-                        (new Date().getTime() - track.played_at.getTime()) /
-                          60000,
-                      )}m ago`
-                    : track.played_at >
-                        new Date(new Date().setDate(new Date().getDate() - 1))
-                      ? `${Math.floor(
-                          (new Date().getTime() - track.played_at.getTime()) /
-                            3600000,
-                        )}h ago`
-                      : `${Math.floor(
-                          (new Date().getTime() - track.played_at.getTime()) /
-                            86400000,
-                        )}d ago`)}
-            </span>
+            <span className="opacity-50">{getTimeAgo(track.played_at!)}</span>
           </div>
         ))}
       </div>
     </div>
   );
+}
+
+function getTimeAgo(playedAt: Date) {
+  if (!playedAt) return "Just Now";
+  const currentTime = new Date();
+  const timeDiff = (currentTime.getTime() - playedAt.getTime()) / 1000;
+  const thresholds = [
+    { label: "Just Now", seconds: 60 },
+    { label: "m ago", seconds: 3600 },
+    { label: "h ago", seconds: 86400 },
+    { label: "d ago", seconds: Infinity },
+  ];
+
+  for (const { label, seconds } of thresholds) {
+    if (timeDiff < seconds) {
+      if (label === "Just Now") {
+        return label;
+      } else {
+        const divisor = seconds === Infinity ? 86400 : seconds / 60;
+        const value = Math.floor(timeDiff / divisor);
+        return `${value}${label}`;
+      }
+    }
+  }
 }

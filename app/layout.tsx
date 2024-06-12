@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Roboto as FontSans } from "next/font/google";
+import { Inter as FontSans } from "next/font/google";
 import "@/app/globals.css";
 import { cn } from "@/lib/utils";
 
@@ -20,9 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable,
+        )}
       >
         {children}
       </body>

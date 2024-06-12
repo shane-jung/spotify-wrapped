@@ -8,7 +8,7 @@ interface Artist {
 
 export default async function TopArtists({ period }: { period: string }) {
   const { items: artists } = await fetchTopArtists();
-  console.log(artists);
+  // console.log(artists);
   // useEffect(() => {
   //   if (period === "alltime") {
   //     setPeriodText("All Time");

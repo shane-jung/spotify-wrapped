@@ -1,16 +1,12 @@
-import { signIn } from "@/auth";
-
-// const handleSignin = async () => {
-//   "use server";
-//   signIn("spotify");
-// };
+import { auth, signIn } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function SignIn() {
   return (
     <form
       action={async () => {
         "use server";
-        await signIn("spotify");
+        await signIn("spotify", { redirectTo: "/home" });
       }}
       className="mt-12 flex h-screen flex-col items-center justify-center"
     >
